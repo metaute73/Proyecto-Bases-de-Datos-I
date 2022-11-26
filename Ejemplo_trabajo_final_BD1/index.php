@@ -47,6 +47,7 @@
             <li><a href="empresa/empresa.php">Entidad análoga a EMPRESA (NOMBRE)</a></li>
             <li><a href="proyecto/proyecto.php">Entidad análoga a PROYECTO (NOMBRE)</a></li>
             <li><a href="listado de pago/listadodepago.php">Entidad análoga a Listado de pago </a></li>
+            <li><a href="recibo/recibo.php">recibo </a></li>
             <li><a href="banco/banco.php">Entidad análoga a BANCO (Banco) </a></li>
             <li><a href="consultas/consulta1.php">Consulta 1</a></li>
             <li><a href="consultas/consulta2.php">Consulta 2</a></li>

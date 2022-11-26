@@ -3,12 +3,12 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Entidad análoga a EMPRESA (NOMBRE)</h1>
+<h1 class="mt-3">BANCO</h1>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">
 
-    <form action="empresa_insert.php" method="post" class="form-group">
+    <form action="banco_insert.php" method="post" class="form-group">
 
         <div class="mb-3">
             <label for="nit" class="form-label">NIT</label>
@@ -63,7 +63,7 @@ include "../includes/header.php";
 
 <?php
 // Importar el código del otro archivo
-require("empresa_select.php");
+require("banco_select.php");
 
 // Verificar si llegan datos
 if($resultadoEmpresa and $resultadoEmpresa->num_rows > 0):
