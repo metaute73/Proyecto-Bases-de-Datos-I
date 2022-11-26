@@ -11,7 +11,4 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 
-<body>
-    <div class="container mt-5">
-
-        <a href="/">&#8592; Volver al inicio</a>
+    
