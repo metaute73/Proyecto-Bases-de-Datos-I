@@ -18,28 +18,23 @@ CREATE TABLE recibo(
 );
 
 INSERT INTO recibo VALUES(1,200,'2021-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(11,100,'2021-11-30','Pendiente',1);
-INSERT INTO recibo VALUES(12,100,'2021-11-30','Pendiente',1);
 
 INSERT INTO recibo VALUES(2,200,'2021-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(21,100,'2021-11-30','Pendiente',2);
+INSERT INTO recibo VALUES(21,100,'2021-11-30','Pagado',2);
 INSERT INTO recibo VALUES(22,100,'2021-11-30','Pendiente',2);
 
-INSERT INTO recibo VALUES(3,200,'2021-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(31,100,'2021-11-30','Pendiente',3);
-INSERT INTO recibo VALUES(32,100,'2021-11-30','Pendiente',3);
+INSERT INTO recibo VALUES(3,300,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(31,100,'2021-11-30','Pagado',3);
+INSERT INTO recibo VALUES(32,100,'2021-11-30','Pagado',3);
+INSERT INTO recibo VALUES(33,100,'2021-11-30','Pendiente',3);
 
-INSERT INTO recibo VALUES(4,200,'2020-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(41,100,'2020-11-30','Pendiente',4);
-INSERT INTO recibo VALUES(42,100,'2020-11-30','Pendiente',4);
+INSERT INTO recibo VALUES(7,200,'2020-12-28','Pagado',NULL);
+INSERT INTO recibo VALUES(71,50,'2020-12-20','Pagado',7);
+INSERT INTO recibo VALUES(72,50,'2020-12-22','Pagado',7);
+INSERT INTO recibo VALUES(73,50,'2020-12-26','Pagado',7);
+INSERT INTO recibo VALUES(74,50,'2020-12-28','Pagado',7);
 
-INSERT INTO recibo VALUES(5,80,'2021-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(51,40,'2021-11-30','Pendiente',5);
-INSERT INTO recibo VALUES(52,40,'2021-11-30','Pendiente',5);
-
-INSERT INTO recibo VALUES(6,80,'2021-11-30','Pendiente',NULL);
-INSERT INTO recibo VALUES(61,40,'2021-11-30','Pendiente',6);
-INSERT INTO recibo VALUES(62,40,'2021-11-30','Pendiente',6);
+INSERT INTO recibo VALUES(8,60,'2021-12-28','Pendiente',NULL);
 
 
 
@@ -52,34 +47,29 @@ CREATE TABLE listado_de_pago(
   PRIMARY KEY(codigoRecibo,codigoBanco)  
 );
 
-INSERT INTO listado_de_pago VALUES(11,123,'2021-11-28');
-INSERT INTO listado_de_pago VALUES(12,123,'2021-11-29');
 
-INSERT INTO listado_de_pago VALUES(21,123,'2021-12-28');
-INSERT INTO listado_de_pago VALUES(22,123,'2021-12-29');
 
-INSERT INTO listado_de_pago VALUES(31,123,'2021-12-28');
-INSERT INTO listado_de_pago VALUES(32,123,'2021-12-28');
 
-#No sale año 2020
-INSERT INTO listado_de_pago VALUES(41,123,'2020-12-28');
-INSERT INTO listado_de_pago VALUES(42,123,'2020-12-28');
+INSERT INTO listado_de_pago VALUES(21,156,'2021-11-29');
 
-#No sale valor del 5 es 80
-INSERT INTO listado_de_pago VALUES(51,123,'2020-12-28');
-INSERT INTO listado_de_pago VALUES(52,123,'2020-12-28');
+INSERT INTO listado_de_pago VALUES(31,123,'2020-12-27');
+INSERT INTO listado_de_pago VALUES(32,123,'2020-12-27');
 
-#No sale, solo uno pagado
-INSERT INTO listado_de_pago VALUES(61,123,'2021-11-28');
+INSERT INTO listado_de_pago VALUES(7,123,'2020-12-27');
+INSERT INTO listado_de_pago VALUES(71,123,'2020-12-19');
+INSERT INTO listado_de_pago VALUES(72,123,'2020-12-21');
+INSERT INTO listado_de_pago VALUES(73,899,'2020-12-25');
+INSERT INTO listado_de_pago VALUES(74,899,'2020-12-27');
+
 
 
 #Consulta 1
-SELECT rc.subrecibo AS 'Código', rc.estado AS 'Estado' FROM recibo rc
-INNER JOIN listado_de_pago pg ON rc.codigo=pg.codigoRecibo
-WHERE (rc.costo>=100 AND YEAR(rc.fecha_pago_oportuno)>2020)
-GROUP BY rc.subrecibo
-HAVING COUNT(*)>=2
-ORDER BY rc.codigo;
+SELECT rc.subrecibo_de AS 'Código', rc.estado AS 'Estado' 
+FROM recibo rc 
+INNER JOIN listado_de_pago pg ON rc.codigo=pg.codigoRecibo 
+WHERE (rc.subrecibo_de is NOT null AND rc.costo>=100 AND YEAR(rc.fecha_pago_oportuno)>2020) 
+GROUP BY rc.subrecibo_de 
+HAVING COUNT(*)>=2 ORDER BY rc.codigo;
 
 #Consulta 2
 SELECT  bc.codigo, bc.nombre, AVG(DAY(pg.fechaPagoReal)) AS Promedio
@@ -89,6 +79,7 @@ GROUP BY pg.codigoBanco
 HAVING (AVG(DAY(pg.fechaPagoReal))<29 AND COUNT(*)>=3);
 
 #Busqueda1
+SELECT * FROM recibo rb WHERE rb.fecha_pago_oportuno BETWEEN '$fecha1' AND '$fecha2'";
 
 
 #Busqueda2

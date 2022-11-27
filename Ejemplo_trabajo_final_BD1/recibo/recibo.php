@@ -3,7 +3,14 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Recibo</h1>
+<h1 class="mt-3">Entidad análoga a PELÍCULA (Recibo) </h1>
+<hr>
+<h4>Anotaciones</h4>
+<ul>
+    <li>Los costos de los subrecibos deben sumar el total del padre.</li>
+    <li>La fecha de pago de los subrecibos no deben sobrepasar la fecha de pago del padre.</li>
+    <li>Un subrecibos no puede tener subrecibos.</li>
+</ul>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">

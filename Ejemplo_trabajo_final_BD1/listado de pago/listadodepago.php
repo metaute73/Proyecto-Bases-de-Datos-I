@@ -3,7 +3,13 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Entidad análoga a PROYECTO (LISTADO DE PAGO)</h1>
+<h1 class="mt-3">Entidad análoga a ROL (LISTADO DE PAGO)</h1>
+<hr>
+<h4>Anotaciones</h4>
+<ul>
+    <li>Se debe controlar que un recibo no se pague dos veces en distintos bancos.</li>
+    
+</ul>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">

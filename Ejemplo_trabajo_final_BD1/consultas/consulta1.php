@@ -6,7 +6,7 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 1</h1>
 
 <p class="mt-3">
-    Código y nombre de cada una de los recibos que su costo fue mayor que 100, tiene
+    Código y estado de cada una de los recibos que su costo fue mayor que 100, tiene
     al menos dos subrecibos pagados y su año de pago oportuno fue mayor que 2020.
 </p>
 
@@ -15,12 +15,12 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT rc.subrecibo_de AS 'Código', rc.estado AS 'Estado' FROM recibo rc
-INNER JOIN listado_de_pago pg ON rc.codigo=pg.codigoRecibo
-WHERE (rc.costo>=100 AND YEAR(rc.fecha_pago_oportuno)>2020)
-GROUP BY rc.subrecibo_de
-HAVING COUNT(*)>=2
-ORDER BY rc.codigo;";
+$query = "SELECT rc.subrecibo_de AS 'Código', rc.estado AS 'Estado' 
+FROM recibo rc 
+INNER JOIN listado_de_pago pg ON rc.codigo=pg.codigoRecibo 
+WHERE (rc.subrecibo_de is NOT null AND rc.costo>=100 AND YEAR(rc.fecha_pago_oportuno)>2020) 
+GROUP BY rc.subrecibo_de 
+HAVING COUNT(*)>=2 ORDER BY rc.codigo;";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
