@@ -113,15 +113,15 @@ if($resultadoListadoPago and $resultadoListadoPago->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente --> 
-                <td class="text-center"><?= $fila["fechapago"]; ?></td>
-                <td class="text-center">codigoRecibo: <?= $fila["recibo"]; ?></td>
-                <td class="text-center">codigoBanco: <?= $fila["banco"]; ?></td>
+                <td class="text-center"> <?= $fila["fechaPagoReal"]; ?></td>
+                <td class="text-center"><?= $fila["codigoRecibo"]; ?></td>
+                <td class="text-center"><?= $fila["codigoBanco"]; ?></td>
                 
                 <!-- Botón de eliminar. Debe de incluir la CP de la entidad para identificarla -->
                 <td class="text-center">
                     <form action="listadodepago_delete.php" method="post">
-                        <input hidden type="text" name="reciboEliminar" value="<?= $fila["recibo"]; ?>">
-                        <input hidden type="text" name="bancoEliminar" value="<?= $fila["banco"]; ?>">
+                        <input hidden type="text" name="reciboEliminar" value="<?= $fila["codigoRecibo"]; ?>">
+                        <input hidden type="text" name="bancoEliminar" value="<?= $fila["codigoBanco"]; ?>">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>

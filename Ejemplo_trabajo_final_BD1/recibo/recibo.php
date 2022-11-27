@@ -35,7 +35,7 @@ include "../includes/header.php";
             <input type="number" class="form-control" id="subrecibo_de" name="subrecibo_de">
         </div>-->
         <div class="mb-3">
-            <label for="subrecibo_de" class="form-label">Subrecibo</label>
+            <label for="subrecibo_de" class="form-label">Subrecibo De</label>
             <select name="subrecibo_de" id="subrecibo_de" class="form-select">
                 
                 <!-- Option por defecto -->
@@ -53,7 +53,7 @@ include "../includes/header.php";
                 ?>
 
                 <!-- Opción que se genera -->
-                <option value="<?= $fila["codigo"]; ?>"> - codigoRecibo <?= $fila["codigo"]; ?></option>
+                <option value="<?= $fila["codigo"]; ?>"> codigo de recibo padre: <?= $fila["codigo"]; ?></option>
 
                 <?php
                         // Cerrar los estructuras de control
@@ -88,7 +88,7 @@ if($resultadoRecibo and $resultadoRecibo->num_rows > 0):
                 <th scope="col" class="text-center">Costo</th>
                 <th scope="col" class="text-center">Fecha</th>
                 <th scope="col" class="text-center">Estado</th>
-                <th scope="col" class="text-center">Subrecibo</th>
+                <th scope="col" class="text-center">Subrecibo de</th>
             </tr>
         </thead>
 
