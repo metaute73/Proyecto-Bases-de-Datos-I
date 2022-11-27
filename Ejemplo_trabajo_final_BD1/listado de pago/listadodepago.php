@@ -35,7 +35,7 @@ include "../includes/header.php";
                 ?>
 
                 <!-- Opción que se genera -->
-                <option value="<?= $fila["codigo"]; ?>"> - codigoRecibo <?= $fila["codigo"]; ?></option>
+                <option value="<?= $fila["codigo"]; ?>"> - codigoRecibo: <?= $fila["codigo"]; ?></option>
 
                 <?php
                         // Cerrar los estructuras de control

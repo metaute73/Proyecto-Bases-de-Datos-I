@@ -30,7 +30,7 @@
         <ul>
             <li>Daniel Metaute Medina</li>
             <li>Marlon Santiago Nivia Devia</li>
-            <li>Jose Miguel Sanchez Gonzalez</li>
+            <li>Jose Miguel Sánchez González</li>
         </ul>
     </div>
 
@@ -44,9 +44,9 @@
         <h2>Enlaces</h2>
         <ul>
             
-            <li><a href="recibo/recibo.php">Entidad análoga a RECIBO (Recibo)</a></li>
-            <li><a href="banco/banco.php">Entidad análoga a BANCO (Banco) </a></li>
-            <li><a href="listado de pago/listadodepago.php">Entidad análoga a LISTADO DE PAGO (Listado de pago) </a></li>
+            <li><a href="recibo/recibo.php">Entidad análoga a PELICULA (Recibo)</a></li>
+            <li><a href="banco/banco.php">Entidad análoga a ACTOR (Banco) </a></li>
+            <li><a href="listado de pago/listadodepago.php">Entidad análoga a ROL (Listado de pago) </a></li>
             <li><a href="consultas/consulta1.php">Consulta 1</a></li>
             <li><a href="consultas/consulta2.php">Consulta 2</a></li>
             <li><a href="busqueda/busqueda1.php">Búsqueda 1</a></li>
