@@ -60,73 +60,147 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $recibo = $_POST["recibo"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    
-    $query2 = "SELECT R.subrecibo_de AS recibo,R.codigo as subrecibos, 
-    RA.costo, RA.fecha_pago_oportuno, RA.estado 
-    FROM recibo R INNER JOIN (recibo RA) ON R.subrecibo_de = RA.codigo 
-    WHERE R.subrecibo_de = '$recibo'";
+    $query = "SELECT subrecibo_de FROM recibo WHERE codigo = '$recibo'";
+    $resultado = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    //mysqli_close($conn);
+    foreach ($resultado as $fila):
+        if ($fila["subrecibo_de"] == ""):
+        
+            $query2 = "SELECT R.subrecibo_de AS recibo,R.codigo as subrecibos, 
+            RA.costo, RA.fecha_pago_oportuno, RA.estado 
+            FROM recibo R INNER JOIN (recibo RA) ON R.subrecibo_de = RA.codigo 
+            WHERE R.subrecibo_de = '$recibo'";
 
-    $resultado2 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
+            $resultado2 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
 
-    mysqli_close($conn);
+            mysqli_close($conn);
 
-    if($resultado2 and $resultado2->num_rows > 0):
-?>
+            if($resultado2 and $resultado2->num_rows > 0):
+                ?>
 
-<!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
-<div class="tabla mt-5 mx-3 rounded-3 overflow-hidden">
+                <!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
+                <div class="tabla mt-5 mx-3 rounded-3 overflow-hidden">
 
-    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered">
 
-        <!-- Títulos de la tabla, cambiarlos -->
-        <thead class="table-dark">
-            <tr>
-                <th scope="col" class="text-center">Recibo</th>
-                <th scope="col" class="text-center">Subrecibos</th>
-                <th scope="col" class="text-center">Costo</th>
-                <th scope="col" class="text-center">Fecha</th>
-                <th scope="col" class="text-center">Estado</th>
-            </tr>
-        </thead>
+                        <!-- Títulos de la tabla, cambiarlos -->
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" class="text-center">Recibo</th>
+                                <th scope="col" class="text-center">Subrecibos</th>
+                                <th scope="col" class="text-center">Costo</th>
+                                <th scope="col" class="text-center">Fecha</th>
+                                <th scope="col" class="text-center">Estado</th>
+                            </tr>
+                        </thead>
 
-        <tbody>
+                        <tbody>
 
-            <?php
-            // Iterar sobre los registros que llegaron
-            foreach ($resultado2 as $fila):
-            ?>
+                            <?php
+                            // Iterar sobre los registros que llegaron
+                            foreach ($resultado2 as $fila):
+                            ?>
 
-            <!-- Fila que se generará -->
-            <tr>
-                <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["recibo"]; ?></td>
-                <td class="text-center"><?= $fila["subrecibos"]; ?></td>
-                <td class="text-center"><?= $fila["costo"]; ?></td>
-                <td class="text-center"><?= $fila["fecha_pago_oportuno"]; ?></td>
-                <td class="text-center"><?= $fila["estado"]; ?></td>
-            </tr>
+                            <!-- Fila que se generará -->
+                            <tr>
+                                <!-- Cada una de las columnas, con su valor correspondiente -->
+                                <td class="text-center"><?= $fila["recibo"]; ?></td>
+                                <td class="text-center"><?= $fila["subrecibos"]; ?></td>
+                                <td class="text-center"><?= $fila["costo"]; ?></td>
+                                <td class="text-center"><?= $fila["fecha_pago_oportuno"]; ?></td>
+                                <td class="text-center"><?= $fila["estado"]; ?></td>
+                            </tr>
 
-            <?php
-            // Cerrar los estructuras de control
-            endforeach;
-            ?>
+                            <?php
+                            // Cerrar los estructuras de control
+                            endforeach;
+                            ?>
 
-        </tbody>
+                        </tbody>
 
-    </table>
-</div>
+                    </table>
+                </div>
 
-<!-- Mensaje de error si no hay resultados -->
-<?php
-else:
-?>
+                <!-- Mensaje de error si no hay resultados -->
+                <?php
+            else:
+                ?>
 
-<div class="alert alert-danger text-center mt-5">
-    No se encontraron resultados para esta consulta
-</div>
+                <div class="alert alert-danger text-center mt-5">
+                    No se encontraron resultados para esta consulta
+                </div>
 
-<?php
-    endif;
+                <?php
+            endif;
+
+        else:
+            
+            $query3 = "SELECT * FROM recibo WHERE codigo = '$recibo'";
+
+            $resultado3 = mysqli_query($conn, $query3) or die(mysqli_error($conn));
+
+            mysqli_close($conn);
+
+            if($resultado3 and $resultado3->num_rows > 0):
+                ?>
+
+                <!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
+                <div class="tabla mt-5 mx-3 rounded-3 overflow-hidden">
+
+                    <table class="table table-striped table-bordered">
+
+                        <!-- Títulos de la tabla, cambiarlos -->
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" class="text-center">Recibo</th>
+                                <th scope="col" class="text-center">Costo</th>
+                                <th scope="col" class="text-center">Fecha</th>
+                                <th scope="col" class="text-center">Estado</th>
+                                <th scope="col" class="text-center">Subrecibo de</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <?php
+                            // Iterar sobre los registros que llegaron
+                            foreach ($resultado3 as $fila):
+                            ?>
+
+                            <!-- Fila que se generará -->
+                            <tr>
+                                <!-- Cada una de las columnas, con su valor correspondiente -->
+                                <td class="text-center"><?= $fila["codigo"]; ?></td>
+                                <td class="text-center"><?= $fila["costo"]; ?></td>
+                                <td class="text-center"><?= $fila["fecha_pago_oportuno"]; ?></td>
+                                <td class="text-center"><?= $fila["estado"]; ?></td>
+                                <td class="text-center"><?= $fila["subrecibo_de"]; ?></td>
+                            </tr>
+
+                            <?php
+                            // Cerrar los estructuras de control
+                            endforeach;
+                            ?>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- Mensaje de error si no hay resultados -->
+                <?php
+            else:
+                ?>
+
+                <div class="alert alert-danger text-center mt-5">
+                    No se encontraron resultados para esta consulta
+                </div>
+
+                <?php
+
+            endif;
+        endif;
+    endforeach;
 endif;
 
 include "../includes/footer.php";
