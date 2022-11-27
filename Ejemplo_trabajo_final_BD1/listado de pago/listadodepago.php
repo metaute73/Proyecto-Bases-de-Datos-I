@@ -13,7 +13,7 @@ include "../includes/header.php";
         <div class="mb-3">
             <label for="fechapago" class="form-label">Fecha de pago</label>
             <input type="date" class="form-control" id="fechapago" name="fechapago" required>
-        </div>>
+        </div>
         
         <!-- Consultar la lista de recibos y desplegarlos -->
         <div class="mb-3">
