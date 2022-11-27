@@ -16,17 +16,34 @@ include "../includes/header.php";
 
     <!-- En esta caso, el Action va a esta mismo archivo -->
     <form action="busqueda2.php" method="post" class="form-group">
-
         <div class="mb-3">
-            <label for="numero1" class="form-label">Numero 1</label>
-            <input type="number" class="form-control" id="numero1" name="numero1" required>
-        </div>
+            <label for="recibo" class="form-label">Recibo</label>
+            <select name="recibo" id="recibo" class="form-select">
+                
+                <!-- Option por defecto -->
+                <option value="" selected disabled hidden></option>
 
-        <div class="mb-3">
-            <label for="numero2" class="form-label">Numero 2</label>
-            <input type="number" class="form-control" id="numero2" name="numero2" required>
-        </div>
+                <?php
+                // Importar el código del otro archivo
+                require("../recibo/recibo_select.php");
+                
+                // Verificar si llegan datos
+                if($resultadoRecibo):
+                    
+                    // Iterar sobre los registros que llegaron
+                    foreach ($resultadoRecibo as $fila):
+                ?>
 
+                <!-- Opción que se genera -->
+                <option value="<?= $fila["codigo"]; ?>"> codigo de recibo padre: <?= $fila["codigo"]; ?></option>
+
+                <?php
+                        // Cerrar los estructuras de control
+                    endforeach;
+                endif;
+                ?>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
 
     </form>
@@ -40,19 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     // Crear conexión con la BD
     require('../config/conexion.php');
 
-    $numero1 = $_POST["numero1"];
-    $numero2 = $_POST["numero2"];
+    $recibo = $_POST["recibo"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT nit, nombre FROM empresa";
+    
+    $query2 = "SELECT R.subrecibo_de AS recibo,R.codigo as subrecibos, 
+    RA.costo, RA.fecha_pago_oportuno, RA.estado 
+    FROM recibo R INNER JOIN (recibo RA) ON R.subrecibo_de = RA.codigo 
+    WHERE R.subrecibo_de = '$recibo'";
 
-    // Ejecutar la consulta
-    $resultadoB2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
+    $resultado2 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
 
     mysqli_close($conn);
 
-    // Verificar si llegan datos
-    if($resultadoB2 and $resultadoB2->num_rows > 0):
+    if($resultado2 and $resultado2->num_rows > 0):
 ?>
 
 <!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
@@ -63,8 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Celular</th>
+                <th scope="col" class="text-center">Recibo</th>
+                <th scope="col" class="text-center">Subrecibos</th>
+                <th scope="col" class="text-center">Costo</th>
+                <th scope="col" class="text-center">Fecha</th>
+                <th scope="col" class="text-center">Estado</th>
             </tr>
         </thead>
 
@@ -72,14 +93,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 
             <?php
             // Iterar sobre los registros que llegaron
-            foreach ($resultadoB2 as $fila):
+            foreach ($resultado2 as $fila):
             ?>
 
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
-                <td class="text-center"><?= $fila["celular"]; ?></td>
+                <td class="text-center"><?= $fila["recibo"]; ?></td>
+                <td class="text-center"><?= $fila["subrecibos"]; ?></td>
+                <td class="text-center"><?= $fila["costo"]; ?></td>
+                <td class="text-center"><?= $fila["fecha_pago_oportuno"]; ?></td>
+                <td class="text-center"><?= $fila["estado"]; ?></td>
             </tr>
 
             <?php
