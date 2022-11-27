@@ -1,3 +1,62 @@
+CREATE TABLE banco(
+  codigo INT(10) PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL
+);
+
+INSERT INTO banco VALUES(123,'BancoMarlon');
+INSERT INTO banco VALUES(156,'DaniPlata');
+INSERT INTO banco VALUES(899,'JoseVillas');
+
+
+CREATE TABLE recibo(
+  codigo INT(10) PRIMARY KEY,
+  costo INT(250) NOT NULL,
+  fecha_pago_oportuno DATE NOT NULL,
+  estado VARCHAR(30) NOT NULL,
+  subrecibo_de INT(10),
+  FOREIGN KEY(subrecibo_de) references recibo
+);
+
+INSERT INTO recibo VALUES(1,200,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(11,100,'2021-11-30','Pendiente',1);
+INSERT INTO recibo VALUES(12,100,'2021-11-30','Pendiente',1);
+
+INSERT INTO recibo VALUES(2,200,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(21,100,'2021-11-30','Pendiente',2);
+INSERT INTO recibo VALUES(22,100,'2021-11-30','Pendiente',2);
+
+INSERT INTO recibo VALUES(3,200,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(31,100,'2021-11-30','Pendiente',3);
+INSERT INTO recibo VALUES(32,100,'2021-11-30','Pendiente',3);
+
+INSERT INTO recibo VALUES(4,200,'2020-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(41,100,'2020-11-30','Pendiente',4);
+INSERT INTO recibo VALUES(42,100,'2020-11-30','Pendiente',4);
+
+INSERT INTO recibo VALUES(5,80,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(51,40,'2021-11-30','Pendiente',5);
+INSERT INTO recibo VALUES(52,40,'2021-11-30','Pendiente',5);
+
+INSERT INTO recibo VALUES(6,80,'2021-11-30','Pendiente',NULL);
+INSERT INTO recibo VALUES(61,40,'2021-11-30','Pendiente',6);
+INSERT INTO recibo VALUES(62,40,'2021-11-30','Pendiente',6);
+
+
+
+CREATE TABLE listado_de_pago(
+  codigoRecibo INT(10),
+  codigoBanco INT(10),
+  fechaPagoReal DATE NOT NULL,
+  FOREIGN KEY(codigoRecibo) references recibo,
+  FOREIGN KEY(codigoBanco) references banco,
+  PRIMARY KEY(codigoRecibo,codigoBanco)  
+);
+
+INSERT INTO listado_de_pago VALUES(11,123,'2021-11-28');
+INSERT INTO listado_de_pago VALUES(12,123,'2021-11-29');
+
+INSERT INTO listado_de_pago VALUES(21,123,'2021-12-28');
+INSERT INTO listado_de_pago VALUES(22,123,'2021-12-29');
 
 INSERT INTO listado_de_pago VALUES(31,123,'2021-12-28');
 INSERT INTO listado_de_pago VALUES(32,123,'2021-12-28');
