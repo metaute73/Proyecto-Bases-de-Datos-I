@@ -7,8 +7,7 @@ include "../includes/header.php";
 
 <p class="mt-3">
     Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
-    n ≥ 0. Se debe mostrar la cédula y el celular de todos los clientes que han 
-    revisado exactamente n proyectos en dicho rango de fechas [f1, f2].
+    n ≥ 0. Se debe mostrar los recibos cuya fecha de pago oportuno este en dicho rango de fechas [f1, f2].
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
@@ -45,11 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $fecha1 = $_POST["fecha1"];
     $fecha2 = $_POST["fecha2"];
 
-    echo($fecha1);
-    echo($fecha2);
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT * FROM recibo rb WHERE rb.fecha_pago_oportuno BETWEEN $fecha1 AND $fecha2";
+    $query = "SELECT * FROM recibo rb WHERE rb.fecha_pago_oportuno BETWEEN '$fecha1' AND '$fecha2'";
 
     // Ejecutar la consulta
     $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
