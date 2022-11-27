@@ -12,7 +12,7 @@ CREATE TABLE recibo(
   codigo INT(10) PRIMARY KEY,
   costo INT(250) NOT NULL,
   fecha_pago_oportuno DATE NOT NULL,
-  estado VARCHAR(30) NOT NULL,
+  estado VARCHAR(30) NOT NULL CHECK (estado='Pendiente' OR estado='Pagado'),
   subrecibo_de INT(10),
   FOREIGN KEY(subrecibo_de) references recibo
 );
