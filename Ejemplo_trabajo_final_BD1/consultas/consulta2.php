@@ -6,11 +6,8 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 2</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un cliente.
-    El segundo botón debe mostrar el código y el valor de cada uno de los proyectos 
-    que cumple todas las siguientes condiciones: tiene un valor mayor que el 
-    presupuesto de la empresa que lo revisa y además el cliente que lo revisa es el 
-    gerente de la empresa que lo revisa.
+Se muestra el código, nombre  de cada uno de los bancos
+han tenido al menos tres pagos registrados y el promedio de los días de pago real es menor que 29.
 </p>
 
 <?php
@@ -18,7 +15,11 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT codigo, valor FROM proyecto";
+$query = "SELECT  bc.codigo, bc.nombre, AVG(DAY(pg.fechaPagoReal)) AS Promedio
+FROM banco bc
+INNER JOIN listado_de_pago pg ON bc.codigo=pg.codigoBanco
+GROUP BY pg.codigoBanco
+HAVING (AVG(DAY(pg.fechaPagoReal))<29 AND COUNT(*)>=3);";
 
 // Ejecutar la consulta
 $resultadoC2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -39,8 +40,9 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">código</th>
                 <th scope="col" class="text-center">Nombre</th>
+                <th scope="col" class="text-center">Promedio</th>
             </tr>
         </thead>
 
@@ -54,8 +56,9 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
+                <td class="text-center"><?= $fila["codigo"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["Promedio"]; ?></td>
             </tr>
 
             <?php

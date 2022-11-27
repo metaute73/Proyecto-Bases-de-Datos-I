@@ -15,7 +15,12 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT * FROM banco";
+$query = "SELECT rc.subrecibo_de AS 'Código', rc.estado AS 'Estado' FROM recibo rc
+INNER JOIN listado_de_pago pg ON rc.codigo=pg.codigoRecibo
+WHERE (rc.costo>=100 AND YEAR(rc.fecha_pago_oportuno)>2020)
+GROUP BY rc.subrecibo_de
+HAVING COUNT(*)>=2
+ORDER BY rc.codigo;";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -51,8 +56,8 @@ if($resultadoC1 and $resultadoC1->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["codigo"]; ?></td>
-                <td class="text-center"><?= $fila["nombre"]; ?></td>
+                <td class="text-center"><?= $fila["Código"]; ?></td>
+                <td class="text-center"><?= $fila["Estado"]; ?></td>
             </tr>
 
             <?php

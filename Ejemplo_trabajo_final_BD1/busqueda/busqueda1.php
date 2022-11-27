@@ -27,14 +27,11 @@ include "../includes/header.php";
             <input type="date" class="form-control" id="fecha2" name="fecha2" required>
         </div>
 
-        <div class="mb-3">
-            <label for="numero" class="form-label">Número</label>
-            <input type="number" class="form-control" id="numero" name="numero" required>
-        </div>
-
         <button type="submit" class="btn btn-primary">Buscar</button>
 
     </form>
+
+    
     
 </div>
 
@@ -47,10 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 
     $fecha1 = $_POST["fecha1"];
     $fecha2 = $_POST["fecha2"];
-    $numero = $_POST["numero"];
+
+    echo($fecha1);
+    echo($fecha2);
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT cedula, celular FROM cliente";
+    $query = "SELECT * FROM recibo rb WHERE rb.fecha_pago_oportuno BETWEEN $fecha1 AND $fecha2";
 
     // Ejecutar la consulta
     $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -69,8 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Celular</th>
+                <th scope="col" class="text-center">Código</th>
+                <th scope="col" class="text-center">Costo</th>
+                <th scope="col" class="text-center">Fecha pago oportuno</th>
+                <th scope="col" class="text-center">Estado</th>
+                <th scope="col" class="text-center">Subrecibo de</th>                
+
             </tr>
         </thead>
 
@@ -84,8 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
-                <td class="text-center"><?= $fila["celular"]; ?></td>
+                <td class="text-center"><?= $fila["codigo"]; ?></td>
+                <td class="text-center"><?= $fila["costo"]; ?></td>
+                <td class="text-center"><?= $fila["fecha_pago_oportuno"]; ?></td>
+                <td class="text-center"><?= $fila["estado"]; ?></td>
+                <td class="text-center"><?= $fila["subrecibo_de"]; ?></td>
             </tr>
 
             <?php

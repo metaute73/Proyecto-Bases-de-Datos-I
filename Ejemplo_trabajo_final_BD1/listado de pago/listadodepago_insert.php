@@ -9,7 +9,7 @@ $recibo = $_POST["recibo"];
 $banco = $_POST["banco"];
 
 // Query SQL a la BD. Si tienen que hacer comprobaciones, hacerlas acá (Generar una query diferente para casos especiales)
-$query = "INSERT INTO `Listado_de_pago`(`fecha_pago`, `recibo`, `banco`) VALUES ('$fechapago', '$recibo', '$banco')";
+$query = "INSERT INTO `Listado_de_pago`(`fechaPagoReal`, `codigoRecibo`, `codigoBanco`) VALUES ('$fechapago', '$recibo', '$banco')";
 
 // Ejecutar consulta
 $result = mysqli_query($conn, $query) or die(mysqli_error($conn));
