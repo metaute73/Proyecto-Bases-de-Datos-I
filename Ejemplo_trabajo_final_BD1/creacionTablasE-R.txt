@@ -1,0 +1,291 @@
+/* PROGRAMA CURRICULAR */
+--DROP TABLE Programa_Curricular;
+
+CREATE TABLE Programa_Curricular(
+    codigo NUMBER(4) PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE,
+    descripcion VARCHAR(100) UNIQUE,
+    cantidad_semestres NUMBER(2) NOT NULL,
+    cantidad_creditos NUMBER(3) NOT NULL
+);
+
+INSERT INTO Programa_Curricular VALUES(3647, 'Ciencias de la Computacion', 'Programar, matemáticas y más', 10, 146);
+
+SELECT * FROM Programa_Curricular;
+
+
+/* PROFESOR */
+--DROP TABLE Profesor;
+
+CREATE TABLE Profesor (
+    tipo VARCHAR(1) NOT NULL,
+    CHECK (tipo = 'P' OR tipo = 'O'),
+    identificacion NUMBER(10) PRIMARY KEY,
+    tipo_de_identificacion VARCHAR(15) NOT NULL,
+    CHECK (tipo_de_identificacion IN ('TI', 'CC', 'PASAPORTE')),
+    nombbre_profesor VARCHAR(30) NOT NULL,
+    telefono VARCHAR(20) UNIQUE,
+    sueldo NUMBER(10) NOT NULL,
+    area_de_estudio VARCHAR(25) NOT NULL,
+    fecha_inicio_contrato DATE NOT NULL,
+    programa_curricular REFERENCES Programa_Curricular
+);
+
+INSERT INTO Profesor VALUES('P', 1000833111, 'CC', 'Ernesto Baron Yumbo', ' (+57) 3136525114', 3000000, 'Programación Dinámica', TO_DATE('17/12/2015', 'DD/MM/YYYY'), 3647);
+
+SELECT * FROM Profesor;
+
+/*DE PLANTA*/
+--DROP TABLE Planta;
+CREATE TABLE Planta(
+    identificacion REFERENCES Profesor PRIMARY KEY,
+    oficina_asignada VARCHAR(15) UNIQUE,
+    parqueadero_asignado NUMBER(2)
+);
+
+INSERT INTO Planta VALUES(1000872145, 'M8-29', NULL);
+
+SELECT * FROM Planta;
+
+/* OCASIONALES */
+--DROP TABLE Ocasionales;
+CREATE TABLE Ocasionales(
+    identificacion REFERENCES Profesor PRIMARY KEY,
+    disponibilidad_horas NUMBER(3) NOT NULL,
+    cubre_fallas VARCHAR(2) NOT NULL,
+    CHECK (cubre_fallas = 'SI' OR cubre_fallas = 'NO')
+);
+
+INSERT INTO Ocasionales VALUES(1000872145, 6, 'SI');
+
+SELECT * FROM Ocasionales;
+
+
+/* MATERIA */
+--DROP TABLE Materia;
+CREATE TABLE Materia(
+    codigo NUMBER(8) PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL,
+    cantidad_creditos NUMBER(2) NOT NULL,
+    descripcion VARCHAR(100) NOT NULL,
+    dia VARCHAR(10) NOT NULL,
+    hora_inicio NUMBER(2) NOT NULL CHECK (MOD(hora_inicio,2) = 0),
+    tipologia VARCHAR(15) CHECK (tipologia IN ('opcional', 'obligatoria', 'libre eleccion')),
+    salon VARCHAR(15) NOT NULL,
+    periodo_vigencia VARCHAR(7) NOT NULL,
+    profesor REFERENCES Profesor,
+    modalidad VARCHAR(12) NOT NULL CHECK(modalidad = 'Presencial' OR modalidad = 'Virtual'),
+    programa_curricular REFERENCES Programa_Curricular,
+    UNIQUE(dia, hora_inicio, salon, periodo_vigencia)
+);
+
+
+
+INSERT INTO Materia VALUES(30, 'programacion', 6, 'materia', 'lunes', 9, 'obligatoria', 'm8-202', '2022-2', 1000872141, 3647);
+INSERT INTO Materia VALUES(31, 'programacion 2', 6, 'materia', 'lunes', 10, 'obligatoria', 'm8-202', '2022-2', 1000872147, 3647);
+SELECT * FROM Materia;
+
+
+
+
+
+
+
+--DROP TABLE Pareja_de_flujo_de_malla_curricular;
+CREATE TABLE Pareja_de_flujo_de_malla_curricular(
+	materia NUMBER(8) REFERENCES Materia, 
+	prerrequisito NUMBER(8) REFERENCES Materia, 
+	PRIMARY KEY(materia,prerrequisito),
+	CHECK(materia <> prerrequisito)
+);
+
+INSERT INTO Pareja_de_flujo_de_malla_curricular VALUES (31,30);
+INSERT INTO Pareja_de_flujo_de_malla_curricular VALUES (41,40);
+
+
+SELECT * FROM Pareja_de_flujo_de_malla_curricular;
+
+Nota
+-Se debe controlar que una materia no puede ser prerrequisito de si misma.
+
+/* LISTADO DE INSCRIPCION*/
+--DROP TABLE Listado_de_inscripcion;
+CREATE TABLE Listado_de_inscripcion(
+	materia NUMBER(8) REFERENCES Materia,
+	estudiante NUMBER(10) REFERENCES Estudiante,
+	estado VARCHAR(15) CHECK (estado IN ('Cancelada', 'Reprobada', 'Aprobada','En proceso')) NOT NULL,
+	nota_final NUMBER(1) CHECK (nota_final BETWEEN 0 AND 5),
+	CHECK((estado='En proceso' and nota_final IS NULL) OR 
+	      (estado='Cancelada' and nota_final IS NULL) OR 
+	      (estado='Aprobada' and nota_final IS NOT NULL) OR 
+	      (estado='Reprobada' and nota_final IS NOT NULL)),
+    PRIMARY KEY(materia,estudiante)
+);
+
+INSERT INTO Listado_de_inscripcion VALUES (30,1001,'En proceso',NULL);
+INSERT INTO Listado_de_inscripcion VALUES (41,1002,'Aprobada',5);
+
+SELECT * FROM Listado_de_inscripcion;
+
+/* BANCO */
+--DROP TABLE Banco;
+CREATE TABLE Banco(
+	codigo NUMBER(8) PRIMARY KEY, 
+	nombre VARCHAR(30) NOT NULL
+);
+
+INSERT INTO Banco VALUES(123,'Bancolombia');
+INSERT INTO Banco VALUES(124,'Colpatria');
+
+SELECT * FROM Banco;
+
+
+/* RECIBO */
+--DROP TABLE recibo;
+CREATE TABLE recibo(
+    codigo NUMBER(10) PRIMARY KEY,
+    costo NUMBER(20) NOT NULL,
+    fecha_pago_oportuno NUMBER(20) NOT NULL,
+    estado VARCHAR(20) CHECK (estado IN ('Pagado','Pendiente')) NOT NULL,
+    estudiante REFERENCES Estudiante NOT NULL,
+    subrecibo_de REFERENCES Recibo
+);
+
+INSERT INTO Recibo VALUES(666,20000,230522,'Pendiente',1002,NULL);
+INSERT INTO Recibo VALUES(6661,10000,230522,'Pendiente',1002,666);
+INSERT INTO Recibo VALUES(6662,10000,230522,'Pendiente',1002,666);
+
+SELECT * FROM Recibo;
+
+Notas
+-Un subrecibos no puede tener subrecibos.
+-La fecha de pago de los subrecibos no deben sobrepasar la fecha de pago del padre.
+-Los costos de los subrecibos deben sumar el total del padre.
+
+
+
+
+
+/* LISTADO DE PAGO*/
+--DROP TABLE Listado_de_pago;
+CREATE TABLE Listado_de_pago(
+	recibo NUMBER(10) REFERENCES Recibo,
+	banco NUMBER(8) REFERENCES Banco,
+	fecha_pago number(6) not null,
+	PRIMARY KEY (recibo,banco)
+);	
+
+INSERT INTO Listado_de_pago VALUES(6661,123,131122);
+INSERT INTO Listado_de_pago VALUES(6662,123,141122);
+
+SELECT * FROM Listado_de_pago;
+
+
+
+/* SEGURO */
+
+--DROP TABLE Seguro;
+
+CREATE TABLE Seguro(
+	Codigo NUMBER(4) PRIMARY KEY,	
+	Empresa_Prestadora_De_Salud VARCHAR(15) NOT NULL,
+	Costo NUMBER(8) NOT NULL,
+	Direccion_De_Atencion VARCHAR(15) NOT NULL
+);
+
+INSERT INTO seguro VALUES(1234, 'sura', 100000, 'Cr48 #147-36');
+INSERT INTO seguro VALUES(2345, 'BuenaSalud', 200000, 'Cr50 #201-76');
+INSERT INTO seguro VALUES(7892, 'MataSanos', 300000, 'Cr49 #157-89');
+INSERT INTO seguro VALUES(7823, 'MuerteSegura', 400000, 'Cr47 #232-34');
+
+
+--SELECT * FROM Seguro;
+
+
+
+
+/* TESIS */
+
+--DROP TABLE Tesis;
+
+CREATE TABLE Tesis(
+	Codigo NUMBER(4) PRIMARY KEY,	
+	Tema VARCHAR(20) NOT NULL,
+	Calificacion NUMBER(1),
+	Estado VARCHAR(14) NOT NULL,
+	Fecha_De_Publicacion VARCHAR(15),
+	Supervisor NUMBER(10) REFERENCES Profesor, CHECK (Supervisor.tipo = 'P'), 
+	CHECK ((Estado = 'En proceso' AND (Fecha_De_Publicacion IS NULL AND Calificacion IS NULL)) 
+		OR 
+		(Estado IN ('Aprobada', 'Reprobada') AND (Fecha_De_Publicacion IS NOT NULL AND (0 <= Calificacion <= 5))))
+
+	--Verificar que el atributo tipo de supervisor tenga el valor 'P'
+);
+
+INSERT INTO Tesis VALUES(1246, 'PvsNP', NULL,'En proceso', NULL,1000872145);
+INSERT INTO Tesis VALUES(1646, 'Telep Cuantica', 4,'Aprobada', '16/07/21',1000872145);
+
+--SELECT * FROM Tesis;
+
+
+
+/* PRACTICA */
+
+--DROP TABLE Practica;
+
+CREATE TABLE Practica(
+	Codigo NUMBER(4) PRIMARY KEY,	
+	Empresa VARCHAR(20) NOT NULL,
+	Cargo VARCHAR(35) NOT NULL,
+	Calificacion NUMBER(1), 
+	Estado VARCHAR(14) NOT NULL, 
+	Fecha_De_Inicio VARCHAR(10),
+	Supervisor NUMBER(10) NOT NULL REFERENCES Profesor,
+	CHECK ((Estado = 'En proceso' AND (Calificacion IS NULL AND Fecha_De_Inicio IS NULL)) 
+		OR
+		(Estado = 'En proceso' AND (Calificacion IS NULL AND Fecha_De_Inicio IS NOT NULL))
+		OR 
+		(Estado IN ('Aprobada', 'Reprobada') AND (0 <= Calificacion <= 5)))
+
+	--Verificar que el atributo tipo de supervisor tenga el valor 'P'
+);
+
+INSERT INTO Practica VALUES(1225, 'Argos', 'Ingeniero de procesos', NULL, 'En proceso', '22/05/2022',1000872145);
+INSERT INTO Practica VALUES(3425, 'TIGO', 'Supervisor de servidores', 4, 'Aprobada', '24/07/2020', 1000872145);
+
+--SELECT * FROM Practica;
+
+/* ESTUDIANTE */
+
+--DROP TABLE Estudiante;
+
+CREATE TABLE Estudiante(
+	Identificacion NUMBER(10) PRIMARY KEY,
+	Tipo_De_Identificacion VARCHAR(10) NOT NULL, CHECK (Tipo_De_Identificacion IN ('CC', 'TI', 'Pasaporte')), 	
+	Nombre VARCHAR(35) NOT NULL,
+	Telefono_De_Contacto NUMBER(15) NOT NULL,
+	Correo_Institucional VARCHAR(30) UNIQUE NOT NULL,
+	Estrato_Social NUMBER(1) NOT NULL, CHECK (1 <= Estrato_Social <= 6),
+	Direccion_De_Residencia VARCHAR(15) NOT NULL,
+	Poblacion_De_Riesgo VARCHAR(15) NOT NULL, CHECK (Poblacion_De_Riesgo  IN ('Desplazado', 'Indigena', 'Pobreza Extrema', 'Ninguna')),
+	Estado VARCHAR(20) NOT NULL,
+	Programa NUMBER(4) NOT NULL REFERENCES Programa_Curricular,
+	Recibo NUMBER(10) NOT NULL REFERENCES Recibo,
+	Seguro NUMBER(4) UNIQUE NOT NULL REFERENCES Seguro,
+	Tesis NUMBER(4) REFERENCES Tesis,
+	Practica NUMBER(4) REFERENCES Practica,
+	CHECK ((Tesis IS NULL AND Practica IS NOT NULL)   
+        OR 
+       (Tesis IS NOT NULL AND Practica IS NULL)
+        OR
+       (Tesis IS NULL AND Practica IS NULL))
+
+	--Verificar que al ingresar un estudiante con el valor de estado 'Egresado' el valor del atributo tipo de su tesis o practica asociada sea 'Aprovada'
+);
+
+INSERT INTO estudiante VALUES(1001213456, 'CC','Camilo Salazar Duque', 3118926, 'casalazardu@unal.edu.co', 3, 'Cra48#100-2', 'Ninguna', 'Activo', 3647, 666, 1234, 1246, NULL);
+
+--SELECT * FROM Estudiante;
+
+
+
